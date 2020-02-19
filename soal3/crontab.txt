@@ -1,0 +1,1 @@
+5 6-23/8 * * 0-5 /bin/bash /home/umum/Documents/SisOpLab/SoalShiftSISOP20_modul1_T08/soal3/soal3.sh
