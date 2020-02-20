@@ -5,7 +5,7 @@ Kelompok T08
   * Muhammad Irsyad Ali (05311840000041)
 
 ---
-# Table of Content
+## Table of Contents
 * [Soal 1](#soal-1)
   * [Soal 1.a.](#soal-1a)
   * [Soal 1.b.](#soal-1b)
@@ -14,6 +14,11 @@ Kelompok T08
   * [Soal 2.a.](#soal-2a)
   * [Soal 2.b.](#soal-2b)
   * [Soal 2.c.](#soal-2c)
+  * [Soal 2.d.](#soal-2d)
+* [Soal 3](#soal-3)
+  * [Soal 3.a.](#soal-3a)
+  * [Soal 3.b.](#soal-3b)
+  * [Soal 3.c.](#soal-3c)
 ---
 
 ## Soal 1
@@ -141,6 +146,8 @@ echo $pass > $PWD/$name.txt
 
 ### Soal 2.c.
 
+Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/tree/master/soal2/soal2_enkripsi.sh)
+
 **Deskripsi:**\
 Kemudian supaya file .txt tersebut tidak mudah diketahui maka nama filenya akan di enkripsi dengan menggunakan konversi huruf (string manipulation) yang disesuaikan dengan jam(0-23) dibuatnya file tersebut dengan program terpisah menggunakan caesar cipher.
 
@@ -161,3 +168,48 @@ crtime=$(sudo debugfs -R 'stat <'"${inode}"'>' "${fs}" 2>/dev/null | grep -oP 'c
   * Karena baris pertama dari command df selalu merupakan nama kolom, maka command sebelumnya di-`pipe` ke command `tail -1` untuk mendapatkan baris terakhirnya.
   * Lalu hasilnya akan di-`pipe` lagi menggunakan `awk {print $1}` untuk menampilkan nama `$fs`(**filesystem**)-nya saja.
 * Lalu kita akan mencari `$crtime` dengan menggunakan `$inode` dan `$fs` yang sudah dicari sebelumnya.
+  * `sudo debugfs -R 'stat <'"${inode}"'>' "${fs}" 2>/dev/null`, digunakan untuk melakukan *debugging* kepada filesystem, `-R` untuk men-*request* kepada debugfs untuk menjalankan perintah `'stat <'"${inode}"'>'`, kepada **filesystem**(`$fs`). `2>/dev/null` digunakan agar **STDERR** tidak ditampilkan.
+  * Lalu di-`pipe` ke command `grep -oP 'crtime.*--\s*\K.*'`, untuk mencari **creation time** file tersebut. Namun formatnya masih berupa `date`.
+  * Lalu di-`pipe` lagi ke command `cut -d ' ' -f 4` untuk mendapatkan format `hh:mm:ss`.
+  * Lalu di-`pipe` lagi ke command `cut -d ':' -f 1` untuk mendapatkan jamnya dan disimpan dalam variable `$crtime`
+
+Langkah selanjutnya adalah melakukan enkripsi pada nama file yang diinputkan berdasarkan `$crtime` yang didapat.
+
+``` bash
+filename="`echo $1 | cut -d "." -f 1`"
+
+encrypt=`echo $filename | tr 'a-z' $(echo {a..z} | sed -r 's/ //g' | sed -r 's/(.{'$crtime'})(.*)/\2\1/') | tr 'A-Z' $(echo {A..Z} | sed -r 's/ //g' | sed -r 's/(.{'$crtime'})(.*)/\2\1/')`
+```
+
+* nama file yang didapat harus di-`cut` terlebih dahulu karena formatnya masih `$filename.txt`
+* untuk mengenkripsi `$filename` tersebut, bisa menggunakan command `tr` (**translate**) pada karakter `'a-z'` ke karakter yang sudah di rotasi menggunakan *caesar cipher*
+  * Untuk melakukan rotasi karakter, kita bisa menggunakan command `sed` (**stream editor**). Pertama, kita akan menge-`print` karakter dari a sampai z menggunakan perintah `echo {a..z}`.
+  * Namun karakter tersebut masih terpisah dengan spasi, jadi akan di-`pipe` dengan command `sed -r 's/ //g'`.
+  * Lalu dari karakter a sampai karakter ke-`$crtime` akan ditaruh dibelakang karakter z dengan command `sed -r 's/(.{'$crtime'})(.*)/\2\1/'`. Sehingga terbentuk list karakter yang sudah terotasi berdasarkan `$crtime`.
+* Lalu `$filename` yang sudah di `tr` akan di `tr` kembali dengan menggunakan karakter `'A-Z'` (Kapital). Untuk prosesnya sama seperti `tr` sebelumnya.
+
+Setelah mendapat nama file yang telah terenkripsi (`$encrypt`), akan dilakukan perubahan nama file menggunakan command `mv`
+
+``` bash
+mv $PWD/$filename.txt $PWD/$encrypt.txt
+```
+
+### Soal 2.d.
+
+Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/tree/master/soal2/soal2_dekripsi.sh)
+
+**Deskripsi:**\
+Jangan lupa untuk membuat dekripsinya supaya nama file bisa kembali
+
+**Pembahasan:**\
+Untuk poin d *script*nya sangat mirip dengan poin c. Yang membedakan adalah ketika melakukan `tr` mulai dari hasil rotasi *caesar cipher* lalu translasi ke `'a-z'`
+
+``` bash
+decrypt=`echo $filename | tr $( echo {a..z} | sed -r 's/ //g' | sed -r 's/(.{'$crtime'})(.*)/\2\1/') 'a-z' | tr $(echo {A..Z} | sed -r 's/ //g' | sed -r 's/(.{'$crtime'})(.*)/\2\1/') 'A-Z'`
+```
+
+---
+
+## Soal 3
+
+Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/tree/master/soal3)
