@@ -146,7 +146,7 @@ echo $pass > $PWD/$name.txt
 
 ### Soal 2.c.
 
-Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/blob/master/soal2/soal2_enkripsi.sh)
+Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/blob/master/soal2/soal2_encrypt.sh)
 
 **Deskripsi:**\
 Kemudian supaya file .txt tersebut tidak mudah diketahui maka nama filenya akan di enkripsi dengan menggunakan konversi huruf (string manipulation) yang disesuaikan dengan jam(0-23) dibuatnya file tersebut dengan program terpisah menggunakan caesar cipher.
@@ -196,7 +196,7 @@ mv $PWD/$filename.txt $PWD/$encrypt.txt
 
 ### Soal 2.d.
 
-Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/blob/master/soal2/soal2_dekripsi.sh)
+Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/blob/master/soal2/soal2_decrypt.sh)
 
 **Deskripsi:**\
 Jangan lupa untuk membuat dekripsinya supaya nama file bisa kembali
@@ -207,6 +207,10 @@ Untuk poin d *script*nya sangat mirip dengan poin c. Yang membedakan adalah keti
 ``` bash
 decrypt=`echo $filename | tr $( echo {a..z} | sed -r 's/ //g' | sed -r 's/(.{'$crtime'})(.*)/\2\1/') 'a-z' | tr $(echo {A..Z} | sed -r 's/ //g' | sed -r 's/(.{'$crtime'})(.*)/\2\1/') 'A-Z'`
 ```
+
+#### ScreenShot
+**Contoh Output:**\
+![Output Soal 2](https://user-images.githubusercontent.com/17781660/74933307-46ad5600-5416-11ea-97fc-51ea2d456711.png)
 
 ---
 
