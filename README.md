@@ -217,3 +217,76 @@ decrypt=`echo $filename | tr $( echo {a..z} | sed -r 's/ //g' | sed -r 's/(.{'$c
 ## Soal 3
 
 Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/tree/master/soal3)
+
+**Deskripsi:**\
+1 tahun telah berlalu sejak pencampakan hati Kusuma. Akankah sang pujaan hati embali ke naungan Kusuma? Memang tiada maaf bagi ELen. Tapi apa daya hati yang sudah hancur, Kusuma masih terguncang akan sikap Elen. Melihat kesedihan Kusuma, kalian mencoba menghibur Kusuma dengan mengirimkan gambar kucing.
+
+### Soal 3.a.
+
+Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/blob/master/soal3/soal3.sh)
+
+**Deskripsi:**\
+Maka dari itu, kalian mencoba membuat script untuk mendownload 28 gambar dari "https://loremflickr.com/320/240/cat" menggunakan command **`wget`** dan menyimpan file dangan nama "pdkt_kusuma_NO" (contoh: pdkt_kusuma_1, pdkt_kusuma_2, pdkt_kusuma_3) serta jangan lupa untuk menyimpan **log messages `wget`** kedalam sebuah file "wget.log"
+
+**Pembahasan:**\
+Untuk mendownload 28 gambar dari alamat tersebut, pertama harus mengecek apakah pada *working directory* terdapat file **"pdkt_kusuma_NO"**. Jika ada, maka script akan melanjutkan penomoran dari file terakhir. Jika tidak ada, maka akan dibuat file **"pdkt_kusuma_1"** sampai **"pdkt_kusuma_28"**. Maka pertama, kita akan mencari **NO** dari file terakhir.
+
+``` bash
+c=`ls $PWD | grep "pdkt_kusuma" | cut -d "_" -f 3 | sort -n | tail -1`
+```
+
+* listing file menggunakan command `ls` lalu akan di-`pipe` ke dalam `grep` untuk mencari seluruh file **"pdkt_kusuma"** dalam directory.
+* Lalu seluruh list file dengan nama **"pdkt_kusuma"** akan di `cut` untuk mendapatkan nomornya saja.
+* Lalu akan di `sort -n` berdasarkan nilai numerik secara ascending.
+* Hasil yang sudah disort akan diambil nilai paling terakhir dengan command `tail -1`
+* Lalu nilai tersebut akan disimpan dalam variable `$c`
+
+Script diatas hanya bisa mendapatkan nilai jika file **"pdkt_kusuma"** sudah ada sebelumnya. Jika tidak ada, variable `$c` tidak akan menyimpan nilai apapun, sementara yang kita inginkan `$c` menyimpan nilai **0**.
+
+``` bash
+if [[ $c =~ [^0-9] ]]
+then
+  c=0
+fi
+```
+
+Lalu akan dilakukan looping dari **`$c` + 1** sampai **`$c + 28`**
+
+``` bash
+a=`expr $c + 1`
+b=`expr $c + 28`
+
+for ((i=a;i<=b;i++))
+do
+  wget -a $PWD/wget.log -O $PWD/"pdkt_kusuma_$i" https://loremflickr.com/320/240/cat
+done
+```
+
+pada command `wget` terdapat opsi `-a` untuk *mengappend* log dari `wget` kedalam file yang dideklarasikan, dan opsi `-O` untuk mendeklarasikan nama file output hasil `wget`
+
+### Soal 3.b.
+
+Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/blob/master/soal3/crontab.txt)
+
+**Deskripsi:**\
+Karena kalian gak suka ribet, kalian membuat penjadwalan untuk menjalankan script download gambar tersebut setiap 8 jam dimulai dari jam 6.05 setiap hari kecuali hari Sabtu
+
+**Pembahasan:**\
+Untuk membuat penjadwalan, dapat menggunakan `crontab -e` dengan penjadwalan sebagai berikut
+
+```
+5 6-23/8 * * 0-5 /bin/bash /home/umum/Documents/SisOpLab/SoalShiftSISOP20_modul1_T08/soal3/soal3.sh
+```
+
+* ***kolom pertama:*** `5` -> setiap menit ke-5
+* ***kolom kedua:*** `6-23/8` -> setiap 8 jam dari jam 6 sampai jam 23
+* ***kolom ketiga:*** `*` -> tanggal bebas
+* ***kolom keempat:*** `*` -> bulan bebas
+* ***kolom kelima:*** `0-5` -> setiap hari minggu sampai jumat (kecuali sabtu)
+
+### Soal 3.c.
+
+Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/blob/master/soal3/soal3send.sh)
+
+**Deskripsi:**\
+Maka dari itu buatlah sebuah script untuk mengidentifikasi gambar yang identik dari keseluruhan gambar yang terdownload tadi. Bila terindikasi sebagai gambar yang identik, maka sisakan 1 gambar dan pindahkan sisa file identik tersebut ke dalam folder ./duplicate dengan format filename "duplicate_nomor" (contoh : duplicate_200, duplicate_201). Setelah itu lakukan pemindahan semua
