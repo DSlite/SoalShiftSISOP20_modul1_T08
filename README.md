@@ -7,13 +7,13 @@ Kelompok T08
 ---
 # Table of Content
 * [Soal 1](#soal-1)
-  * [Soal 1.a.](#soal-1-a)
-  * [Soal 1.b.](#soal-1-b)
-  * [Soal 1.c.](#soal-1-c)
+  * [Soal 1.a.](#soal-1a)
+  * [Soal 1.b.](#soal-1b)
+  * [Soal 1.c.](#soal-1c)
 * [Soal 2](#soal-2)
-  * [Soal 2.a.](#soal-2-a)
-  * [Soal 2.b.](#soal-2-b)
-  * [Soal 2.c.](#soal-2-c)
+  * [Soal 2.a.](#soal-2a)
+  * [Soal 2.b.](#soal-2b)
+  * [Soal 2.c.](#soal-2c)
 ---
 
 ## Soal 1
