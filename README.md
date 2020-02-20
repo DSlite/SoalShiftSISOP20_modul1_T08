@@ -289,4 +289,79 @@ Untuk membuat penjadwalan, dapat menggunakan `crontab -e` dengan penjadwalan seb
 Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/blob/master/soal3/soal3send.sh)
 
 **Deskripsi:**\
-Maka dari itu buatlah sebuah script untuk mengidentifikasi gambar yang identik dari keseluruhan gambar yang terdownload tadi. Bila terindikasi sebagai gambar yang identik, maka sisakan 1 gambar dan pindahkan sisa file identik tersebut ke dalam folder ./duplicate dengan format filename "duplicate_nomor" (contoh : duplicate_200, duplicate_201). Setelah itu lakukan pemindahan semua
+Maka dari itu buatlah sebuah script untuk mengidentifikasi gambar yang identik dari keseluruhan gambar yang terdownload tadi. Bila terindikasi sebagai gambar yang identik, maka sisakan 1 gambar dan pindahkan sisa file identik tersebut ke dalam folder `./duplicate` dengan format filename **"duplicate_nomor"** (contoh : duplicate_200, duplicate_201). Setelah itu lakukan pemindahan semua gambar yang tersisa kedalam folder `./kenangan` dengan format filename **"kenangan_nomor"** (contoh : kenangan_252, kenangan_253). Setelah tidak ada gambar di *current directory*, maka lakukan backup seluruh log menjadi ekstensi `".log.bak"`.
+
+**Pembahasan:**\
+Untuk menentukan apakah sebuah file identik dengan yang lainya, kita dapat **Location** dari masing-masing log pada file `wget.log`. Jika terdapat kesamaan pada **Location** tersebut, maka file tersebut merupakan file **duplicate**.\
+Langkah pertama yang harus dilakukan adalah mencari tahu nomor terakhir dari file **"pdkt_kusuma"**
+
+``` bash
+end=`ls $PWD | grep "pdkt_kusuma" | cut -d "_" -f 3 | sort -n | tail -1`
+```
+
+Konsep kodingan diatas sama dengan poin a. Setelah itu, kita akan mengecek apakah terdapat *directory* `./duplicate` dan `./kenangan`. Jika tidak ada, maka lakukan `mkdir` directory tersebut.
+
+``` bash
+if [[ `ls $PWD | grep "kenangan"` != "kenangan" ]]
+then
+  mkdir $PWD/kenangan
+fi
+
+if [[ `ls $PWD | grep "duplicate"` != "duplicate" ]]
+then
+  mkdir $PWD/duplicate
+fi
+```
+
+Lalu kita akan mendeklarasikan variable `$arr` untuk menyimpan **Location** yang sudah dicek sebelumnya. Disini kami menggunakan *`string`* untuk memudahkan kami dalam proses pengecekan.
+
+``` bash
+arr=""
+```
+
+Lalu akan dilakukan looping dari file pertama, sampai file ke-`$end`
+
+``` bash
+for ((i=1;i<=end;i++))
+do
+  loc="`cat $PWD/wget.log | grep "Location:" | head -$i | tail -1 | cut -d " " -f 2`"
+  isDuplicate=`echo -e $arr | awk -v loc=$loc 'BEGIN {isDuplicate=0} {if (loc==$0) isDuplicate=1} END {printf "%d", isDuplicate}'`
+  if [[ $isDuplicate == 1 ]]
+  then
+    mv $PWD/pdkt_kusuma_$i $PWD/duplicate/duplicate_$i
+  else
+    arr="$arr$loc\n"
+    mv $PWD/pdkt_kusuma_$i $PWD/kenangan/kenangan_$i
+  fi
+done
+```
+
+* `$loc` digunakan untuk menyimpan **Location** dari file saat ini.
+  * Pertama akan dilakukan `cat` pada `wget.log` untuk menampilkan isinya
+  * Lalu di-`pipe` ke dalam `grep` untuk mencari **Location**nya saja.
+  * Karena hasil output tersebut sudah berurut dan sesuai dengan nomor file, maka akan digunakan command `head -$i` untuk mengambil `$i`-baris pertama, lalu `tail -1` untuk mengambil 1 baris terakhir.
+  * Lalu di-`pipe` lagi untuk mendapatkan kolom **Location**nya saja.
+* `$isDuplicate` digunakan untuk menyimpan status apakah file saat ini merupakan duplikat atau bukan.
+  * Pertama `$arr` akan di `echo -e` untuk mengeluarkan isinya (beserta *newline*nya).
+  * Lalu dari hasil `echo` tersebut akan di-`pipe` dengan command `awk`.
+    * Dalam block **BEGIN**: menyatakan variable `isDuplicate=0`. Disini kita berasumsi bahwa file yang saat ini dicek bukan merupakan duplikat.
+    * Dalam block **BODY**: akan melakukan pengecekan apakah terdapat baris yang sama dengan `$loc`, jika ada maka file merupakan duplikat. Sehingga `isDuplicate=1`.
+    * Dalam block **END**: akan menge*print* nilai `isDuplicate` sehingga masuk kedalam variable `$isDuplicate` pada shell.
+* Lalu akan dilakukan pengecekan apakah file yang sedak di-cek merupakan duplikat atau bukan dengan menggunakan variable `$isDuplicate`. Jika iya, maka pindahkan file ke duplicate. Jika tidak, maka tambahkan `$loc` dari file baru tersebut kedalam `$arr` dan pindahkan file ke kenangan.
+
+Setelah itu, `wget.log` akan di-*append* kedalam `wget.log.bak`. Dan `wget.log` akan dihapus.
+
+``` bash
+cat $PWD/wget.log >> $PWD/wget.log.bak
+rm $PWD/wget.log
+```
+
+#### ScreenShot
+**Contoh Output:**\
+![Output Soal 3](https://user-images.githubusercontent.com/17781660/74972328-11bff400-5454-11ea-869e-0f2dc23c346f.png)
+
+**Directory kenangan:**\
+![Directory Kenangan](https://user-images.githubusercontent.com/17781660/74972439-45028300-5454-11ea-9623-4c6c71b76f22.png))
+
+**Directory duplicate:**\
+![Directory Duplicate](https://user-images.githubusercontent.com/17781660/74972484-5ba8da00-5454-11ea-9fb9-7342b6bf2ab5.png)
