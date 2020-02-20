@@ -102,7 +102,7 @@ Pada suatu siang, laptop Randolf dan Afairuzr dibajak oleh seseorang dan kehilan
 
 ### Soal 2.a.
 
-Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/tree/master/soal2/soal2.sh)
+Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/blob/master/soal2/soal2.sh)
 
 **Deskripsi:**\
 Membuat sebuah script bash yang dapat menghasilkan password secara acak sebanyak 28 karakter yang terdapat huruf besar, huruf kecil, dan angka.
@@ -122,7 +122,7 @@ read -r pass <<< "`cat /dev/urandom | tr -cd 'a-zA-Z0-9' | fold -w 28 | head -n 
 
 ### Soal 2.b.
 
-Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/tree/master/soal2/soal2.sh)
+Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/blob/master/soal2/soal2.sh)
 
 **Deskripsi:**\
 Password acak tersebut disimpan pada file berekstensi `.txt` dengan nama berdasarkan argumen yang diinputkan dan **Hanya berupa alphabet**.
@@ -146,7 +146,7 @@ echo $pass > $PWD/$name.txt
 
 ### Soal 2.c.
 
-Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/tree/master/soal2/soal2_enkripsi.sh)
+Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/blob/master/soal2/soal2_enkripsi.sh)
 
 **Deskripsi:**\
 Kemudian supaya file .txt tersebut tidak mudah diketahui maka nama filenya akan di enkripsi dengan menggunakan konversi huruf (string manipulation) yang disesuaikan dengan jam(0-23) dibuatnya file tersebut dengan program terpisah menggunakan caesar cipher.
@@ -196,7 +196,7 @@ mv $PWD/$filename.txt $PWD/$encrypt.txt
 
 ### Soal 2.d.
 
-Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/tree/master/soal2/soal2_dekripsi.sh)
+Source Code : [source](https://github.com/DSlite/SoalShiftSISOP20_modul1_T08/blob/master/soal2/soal2_dekripsi.sh)
 
 **Deskripsi:**\
 Jangan lupa untuk membuat dekripsinya supaya nama file bisa kembali
