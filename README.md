@@ -361,7 +361,7 @@ rm $PWD/wget.log
 ![Output Soal 3](https://user-images.githubusercontent.com/17781660/74972328-11bff400-5454-11ea-869e-0f2dc23c346f.png)
 
 **Directory kenangan:**\
-![Directory Kenangan](https://user-images.githubusercontent.com/17781660/74972439-45028300-5454-11ea-9623-4c6c71b76f22.png))
+![Directory Kenangan](https://user-images.githubusercontent.com/17781660/74972439-45028300-5454-11ea-9623-4c6c71b76f22.png)
 
 **Directory duplicate:**\
 ![Directory Duplicate](https://user-images.githubusercontent.com/17781660/74972484-5ba8da00-5454-11ea-9fb9-7342b6bf2ab5.png)
